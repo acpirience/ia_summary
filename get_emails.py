@@ -1,0 +1,110 @@
+import email
+import imaplib
+import sys
+from datetime import datetime, timedelta
+from email.header import decode_header
+
+from dotenv import dotenv_values
+from loguru import logger
+
+# --- CONFIGURATION ---
+IMAP_SERVER = "imap.gmail.com"
+config = dotenv_values(".env")
+
+EMAIL_USER = config["EMAIL_USER"]
+EMAIL_PASSWORD = config["EMAIL_PASSWORD"]
+
+if (EMAIL_USER is None) or (EMAIL_PASSWORD is None):
+    logger.critical("EMAIL_USER or EMAIL_PASSWORD not found in .env file")
+    sys.exit(1)
+
+# Filter Criteria
+FROM_ADDRESS: list[dict[str, str]] = [
+    {"title": "AlphaSignal", "email": "news@alphasignal.ai"},
+    {"title": "TheRundownAI", "email": "news@daily.therundown.ai"},
+]
+DAYS_AGO = 1  # Look back period
+
+
+def search_and_read_emails(mail_from: dict[str, str]) -> None:
+    # 1. Connect to the server and login
+    logger.info("Connecting to server...")
+    mail = imaplib.IMAP4_SSL(IMAP_SERVER)
+    mail.login(EMAIL_USER, EMAIL_PASSWORD)  # ty: ignore
+
+    # Select the folder you want to search (INBOX is standard)
+    mail.select("inbox")
+
+    # 2. Calculate the date condition for IMAP (Format: DD-Mon-YYYY)
+    since_date = (datetime.now() - timedelta(days=DAYS_AGO)).strftime("%d-%b-%Y")
+
+    # 3. Construct the IMAP search query
+    # IMAP queries use the format: (FROM "email" SINCE "date")
+    search_criterion = f'(FROM "{mail_from["email"]}" SINCE "{since_date}")'
+    print(f"Searching with criteria: {search_criterion}")
+
+    status, messages = mail.search(None, search_criterion)
+
+    if status != "OK":
+        print("No messages found or error occurred.")
+        return
+
+    # mail.search returns a list of space-separated IDs
+    email_ids = messages[0].split()
+    logger.info(f"Found {len(email_ids)} emails matching criteria.\n")
+
+    # 4. Fetch and parse the emails
+    mail_count: int = 0
+    for e_id in email_ids:
+        mail_count += 1
+        # Fetch the email data (RFC822 is the standard email format)
+        status, data = mail.fetch(e_id, "(RFC822)")
+        if status != "OK":
+            continue
+
+        # Parse the raw bytes into an email object
+        raw_email = data[0][1]
+        msg = email.message_from_bytes(raw_email)
+
+        # Decode the email subject
+        subject, encoding = decode_header(msg["Subject"])[0]
+        if isinstance(subject, bytes):
+            subject = subject.decode(encoding or "utf-8")
+
+        logger.info(f"Subject: {subject}")
+        logger.info(f"From: {msg['From']}")
+        logger.info(f"Date: {msg['Date']}")
+
+        # Extract the body of the email
+        body = ""
+        if msg.is_multipart():
+            # If multipart, iterate through the parts to find text/plain
+            for part in msg.walk():
+                content_type = part.get_content_type()
+                content_disposition = str(part.get("Content-Disposition"))
+
+                if (
+                    content_type == "text/html"
+                    and "attachment" not in content_disposition
+                ):
+                    body = part.get_payload(decode=True).decode()
+                    break
+        else:
+            # If not multipart, just grab the payload
+            body = msg.get_payload(decode=True).decode()
+
+        filename: txt = f"{mail_from['email']}_{mail_count:02}.html"
+        logger.info(f"writing file: {filename}")
+
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(body)
+
+        logger.info("-" * 50)
+
+    # 5. Logout safely
+    mail.close()
+    mail.logout()
+
+
+if __name__ == "__main__":
+    logger.critical("launch via main.py")
