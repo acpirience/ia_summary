@@ -14,7 +14,7 @@ def main():
 
     for mail_from in gmail.FROM_ADDRESS:
         logger.info(mail_from)
-        gmail.search_and_read_emails(mail_from)
+        gmail.search_and_read_emails(mail_from, True)
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ FROM_ADDRESS: list[dict[str, str]] = [
 DAYS_AGO = 1  # Look back period
 
 
-def search_and_read_emails(mail_from: dict[str, str]) -> None:
+def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -> None:
     # 1. Connect to the server and login
     logger.info("Connecting to server...")
     mail = imaplib.IMAP4_SSL(IMAP_SERVER)
@@ -63,7 +63,7 @@ def search_and_read_emails(mail_from: dict[str, str]) -> None:
             continue
 
         # Parse the raw bytes into an email object
-        raw_email = data[0][1]
+        raw_email: bytearray = data[0][1]
         msg = email.message_from_bytes(raw_email)
 
         # Decode the email subject
@@ -83,10 +83,7 @@ def search_and_read_emails(mail_from: dict[str, str]) -> None:
                 content_type = part.get_content_type()
                 content_disposition = str(part.get("Content-Disposition"))
 
-                if (
-                    content_type == "text/html"
-                    and "attachment" not in content_disposition
-                ):
+                if content_type == "text/html" and "attachment" not in content_disposition:
                     body = part.get_payload(decode=True).decode()
                     break
         else:
@@ -96,8 +93,11 @@ def search_and_read_emails(mail_from: dict[str, str]) -> None:
         filename: txt = f"{mail_from['email']}_{mail_count:02}.html"
         logger.info(f"writing file: {filename}")
 
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(body)
+        if test_only:
+            logger.info("File not written")
+        else:
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(body)
 
         logger.info("-" * 50)
 
