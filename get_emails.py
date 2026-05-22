@@ -26,7 +26,7 @@ FROM_ADDRESS: list[dict[str, str]] = [
 DAYS_AGO = 1  # Look back period
 
 
-def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -> None:
+def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -> dict[str, str | datetime] | None:
     # 1. Connect to the server and login
     logger.info("Connecting to server...")
     mail = imaplib.IMAP4_SSL(IMAP_SERVER)
@@ -75,6 +75,8 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
         logger.info(f"From: {msg['From']}")
         logger.info(f"Date: {msg['Date']}")
 
+        mail_read: dict[str, str | datetime] = {"title": mail_from["email"], "id": e_id, "date": msg["Date"]}
+
         # Extract the body of the email
         body = ""
         if msg.is_multipart():
@@ -90,7 +92,7 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
             # If not multipart, just grab the payload
             body = msg.get_payload(decode=True).decode()
 
-        filename: txt = f"{mail_from['email']}_{mail_count:02}.html"
+        filename: str = f"{mail_from['email']}_{mail_count:02}.html"
         logger.info(f"writing file: {filename}")
 
         if test_only:
@@ -104,6 +106,7 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
     # 5. Logout safely
     mail.close()
     mail.logout()
+    return mail_read
 
 
 if __name__ == "__main__":

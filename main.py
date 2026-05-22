@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from loguru import logger
 
@@ -11,10 +12,17 @@ def main():
         os.makedirs("generated_files")
     os.chdir("generated_files")
     logger.info(f"Current Directory is = {os.getcwd()}")
+    mail_read: list[dict[str, str | datetime]] = []
 
     for mail_from in gmail.FROM_ADDRESS:
         logger.info(mail_from)
-        gmail.search_and_read_emails(mail_from, True)
+        result: dict[str, str | datetime] | None = gmail.search_and_read_emails(mail_from, True)
+        if result:
+            mail_read.append(result)
+
+    logger.info(f"emails read: {len(mail_read)}")
+    for mail in mail_read:
+        logger.info(f"{mail['title']} - {mail['id']} - {mail['date']}")
 
 
 if __name__ == "__main__":
