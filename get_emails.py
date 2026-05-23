@@ -21,8 +21,16 @@ if (EMAIL_USER is None) or (EMAIL_PASSWORD is None):
 # Filter Criteria
 FROM_ADDRESS: list[dict[str, str]] = [
     {"title": "AlphaSignal", "email": "news@alphasignal.ai"},
+    {"title": "ByteByteGo", "email": "hi@digest.bytebytego.com"},
+    {"title": "GoogleGemini", "email": "google-gemini-noreply@google.com"},
+    {"title": "Ollama", "email": "hello@ollama.com"},
+    {"title": "PythonWeekly", "email": "rahul@pythonweekly.com"},
+    {"title": "RealPython", "email": "info@realpython.com"},
+    {"title": "Superhuman", "email": "superhuman@mail.joinsuperhuman.ai"},
+    {"title": "TheDeepView", "email": "newsletter@thedeepview.co"},
     {"title": "TheRundownAI", "email": "news@daily.therundown.ai"},
 ]
+
 DAYS_AGO = 1  # Look back period
 
 
@@ -52,6 +60,8 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
     # mail.search returns a list of space-separated IDs
     email_ids = messages[0].split()
     logger.info(f"Found {len(email_ids)} emails matching criteria.\n")
+    if len(email_ids) == 0:
+        return
 
     # 4. Fetch and parse the emails
     mail_count: int = 0
