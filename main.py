@@ -4,10 +4,14 @@ from datetime import datetime
 from loguru import logger
 
 import get_emails as gmail
+from database import Database
 
 
 def main():
     logger.info("Starting ia-summary!")
+    db: Database = Database()
+    db.connect()
+
     if not os.path.exists("generated_files"):
         os.makedirs("generated_files")
     os.chdir("generated_files")
@@ -23,6 +27,8 @@ def main():
     logger.info(f"emails read: {len(mail_read)}")
     for mail in mail_read:
         logger.info(f"{mail['title']} - {mail['id']} - {mail['date']}")
+
+    db.disconnect()
 
 
 if __name__ == "__main__":
