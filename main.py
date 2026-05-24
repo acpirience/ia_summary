@@ -20,7 +20,7 @@ def main():
 
     for mail_from in gmail.FROM_ADDRESS:
         logger.info(mail_from)
-        result: dict[str, str | datetime] | None = gmail.search_and_read_emails(mail_from, True)
+        result: dict[str, str | datetime] | None = gmail.search_and_read_emails(mail_from, False)
         if result:
             mail_read.append(result)
 

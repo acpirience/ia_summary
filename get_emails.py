@@ -20,15 +20,16 @@ if (EMAIL_USER is None) or (EMAIL_PASSWORD is None):
 
 # Filter Criteria
 FROM_ADDRESS: list[dict[str, str]] = [
-    {"title": "AlphaSignal", "email": "news@alphasignal.ai"},
-    {"title": "ByteByteGo", "email": "hi@digest.bytebytego.com"},
-    {"title": "GoogleGemini", "email": "google-gemini-noreply@google.com"},
-    {"title": "Ollama", "email": "hello@ollama.com"},
-    {"title": "PythonWeekly", "email": "rahul@pythonweekly.com"},
-    {"title": "RealPython", "email": "info@realpython.com"},
-    {"title": "Superhuman", "email": "superhuman@mail.joinsuperhuman.ai"},
-    {"title": "TheDeepView", "email": "newsletter@thedeepview.co"},
-    {"title": "TheRundownAI", "email": "news@daily.therundown.ai"},
+    {"title": "Alpha Signal", "email": "alphasignal.ai"},  # news@alphasignal.ai
+    {"title": "Byte Byte Go", "email": "bytebytego.com"},  # hi@digest.bytebytego.com
+    {"title": "Google Gemini", "email": "google-gemini"},  # google-gemini-noreply@google.com
+    {"title": "Ollama", "email": "ollama.com"},  # hello@ollama.com
+    {"title": "Python Weekly", "email": "pythonweekly.com"},  # rahul@pythonweekly.com
+    {"title": "Real Python", "email": "realpython.com"},  # info@realpython.com
+    {"title": "Superhuman", "email": "superhuman"},  # superhuman@mail.joinsuperhuman.ai
+    {"title": "The DeepView", "email": "thedeepview.co"},  # newsletter@thedeepview.co
+    {"title": "The Rundown AI", "email": "therundown.ai"},  # news@daily.therundown.ai
+    {"title": "Anthyme De Minutora", "email": "laminutora"},  # laminutora@10812296.brevosend.com
 ]
 
 DAYS_AGO = 1  # Look back period
@@ -85,7 +86,7 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
         logger.info(f"From: {msg['From']}")
         logger.info(f"Date: {msg['Date']}")
 
-        mail_read: dict[str, str | datetime] = {"title": mail_from["email"], "id": e_id, "date": msg["Date"]}
+        mail_read: dict[str, str | datetime] = {"title": mail_from["title"], "id": str(int(e_id)), "date": msg["Date"]}
 
         # Extract the body of the email
         body = ""
@@ -102,7 +103,7 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
             # If not multipart, just grab the payload
             body = msg.get_payload(decode=True).decode()
 
-        filename: str = f"{mail_from['email']}_{mail_count:02}.html"
+        filename: str = f"{mail_from['title'].replace(' ', '')}_{int(e_id)}_{mail_count:02}.html"
         logger.info(f"writing file: {filename}")
 
         if test_only:
