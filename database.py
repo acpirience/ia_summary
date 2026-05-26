@@ -2,7 +2,7 @@ import sqlite3 as sql
 
 from loguru import logger
 
-DB_NAME: str = "IA_mails.db"
+from config import DB_NAME
 
 
 class Database:

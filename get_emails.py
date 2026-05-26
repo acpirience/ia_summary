@@ -1,38 +1,11 @@
 import email
 import imaplib
-import sys
 from datetime import datetime, timedelta
 from email.header import decode_header
 
-from dotenv import dotenv_values
 from loguru import logger
 
-# --- CONFIGURATION ---
-IMAP_SERVER = "imap.gmail.com"
-config = dotenv_values(".env")
-
-EMAIL_USER = config["EMAIL_USER"]
-EMAIL_PASSWORD = config["EMAIL_PASSWORD"]
-
-if (EMAIL_USER is None) or (EMAIL_PASSWORD is None):
-    logger.critical("EMAIL_USER or EMAIL_PASSWORD not found in .env file")
-    sys.exit(1)
-
-# Filter Criteria
-FROM_ADDRESS: list[dict[str, str]] = [
-    {"title": "Alpha Signal", "email": "alphasignal.ai"},  # news@alphasignal.ai
-    {"title": "Byte Byte Go", "email": "bytebytego.com"},  # hi@digest.bytebytego.com
-    {"title": "Google Gemini", "email": "google-gemini"},  # google-gemini-noreply@google.com
-    {"title": "Ollama", "email": "ollama.com"},  # hello@ollama.com
-    {"title": "Python Weekly", "email": "pythonweekly.com"},  # rahul@pythonweekly.com
-    {"title": "Real Python", "email": "realpython.com"},  # info@realpython.com
-    {"title": "Superhuman", "email": "superhuman"},  # superhuman@mail.joinsuperhuman.ai
-    {"title": "The DeepView", "email": "thedeepview.co"},  # newsletter@thedeepview.co
-    {"title": "The Rundown AI", "email": "therundown.ai"},  # news@daily.therundown.ai
-    {"title": "Anthyme De Minutora", "email": "laminutora"},  # laminutora@10812296.brevosend.com
-]
-
-DAYS_AGO = 1  # Look back period
+from config import DAYS_AGO, EMAIL_PASSWORD, EMAIL_USER, IMAP_SERVER
 
 
 def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -> dict[str, str | datetime] | None:
