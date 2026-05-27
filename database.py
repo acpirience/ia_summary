@@ -20,7 +20,7 @@ class Database:
             return
         self.cursor = self.connection.cursor()
         self.cursor.execute(
-            "CREATE TABLE IF NOT EXISTS mails (title TEXT, id TEXT, date DATETIME, PRIMARY KEY (title, id))"
+            "CREATE TABLE IF NOT EXISTS mails (title TEXT, id TEXT, date DATETIME, run_date DATETIME, PRIMARY KEY (title, id))"
         )
 
     def disconnect(self):
