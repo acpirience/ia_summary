@@ -21,9 +21,9 @@ def main():
 
     for mail_from in FROM_ADDRESS:
         logger.info(mail_from)
-        result: dict[str, str | datetime] | None = gmail.search_and_read_emails(mail_from, False)
+        result: list[dict[str, str | datetime]] | None = gmail.search_and_read_emails(mail_from, False)
         if result:
-            mail_read.append(result)
+            mail_read.extend(result)
 
     logger.info(f"emails read: {len(mail_read)}")
     for mail in mail_read:

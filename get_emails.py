@@ -8,7 +8,14 @@ from loguru import logger
 from config import DAYS_AGO, EMAIL_PASSWORD, EMAIL_USER, IMAP_SERVER
 
 
-def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -> dict[str, str | datetime] | None:
+def get_file_name(title, id, count) -> str:
+    return f"{title.replace(' ', '')}_{str(id)}_{count:02}"
+
+
+def search_and_read_emails(
+    mail_from: dict[str, str], test_only: bool = False
+) -> list[dict[str, str | datetime]] | None:
+    mail_found: list[dict[str, str | datetime]] = []
     # 1. Connect to the server and login
     logger.info("Connecting to server...")
     mail = imaplib.IMAP4_SSL(IMAP_SERVER)
@@ -60,6 +67,7 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
         logger.info(f"Date: {msg['Date']}")
 
         mail_read: dict[str, str | datetime] = {"title": mail_from["title"], "id": str(int(e_id)), "date": msg["Date"]}
+        mail_found.append(mail_read)
 
         # Extract the body of the email
         body = ""
@@ -76,7 +84,7 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
             # If not multipart, just grab the payload
             body = msg.get_payload(decode=True).decode()
 
-        filename: str = f"{mail_from['title'].replace(' ', '')}_{int(e_id)}_{mail_count:02}.html"
+        filename: str = get_file_name(mail_from["title"], e_id, mail_count) + "html"
         logger.info(f"writing file: {filename}")
 
         if test_only:
@@ -90,7 +98,7 @@ def search_and_read_emails(mail_from: dict[str, str], test_only: bool = False) -
     # 5. Logout safely
     mail.close()
     mail.logout()
-    return mail_read
+    return mail_found
 
 
 if __name__ == "__main__":
