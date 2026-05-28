@@ -8,8 +8,8 @@ from loguru import logger
 from config import DAYS_AGO, EMAIL_PASSWORD, EMAIL_USER, IMAP_SERVER
 
 
-def get_file_name(title, id, count) -> str:
-    return f"{title.replace(' ', '')}_{str(id)}_{count:02}"
+def get_file_name(title: str, id: str, count: int) -> str:
+    return f"{title.replace(' ', '')}_{id}_{count:02}"
 
 
 def search_and_read_emails(
@@ -47,6 +47,7 @@ def search_and_read_emails(
     # 4. Fetch and parse the emails
     mail_count: int = 0
     for e_id in email_ids:
+        id: str = e_id.decode("utf-8")
         mail_count += 1
         # Fetch the email data (RFC822 is the standard email format)
         status, data = mail.fetch(e_id, "(RFC822)")
@@ -66,7 +67,7 @@ def search_and_read_emails(
         logger.info(f"From: {msg['From']}")
         logger.info(f"Date: {msg['Date']}")
 
-        mail_read: dict[str, str | datetime] = {"title": mail_from["title"], "id": str(int(e_id)), "date": msg["Date"]}
+        mail_read: dict[str, str | datetime] = {"title": mail_from["title"], "id": id, "date": msg["Date"]}
         mail_found.append(mail_read)
 
         # Extract the body of the email
@@ -84,7 +85,7 @@ def search_and_read_emails(
             # If not multipart, just grab the payload
             body = msg.get_payload(decode=True).decode()
 
-        filename: str = get_file_name(mail_from["title"], e_id, mail_count) + "html"
+        filename: str = get_file_name(mail_from["title"], id, mail_count) + "html"
         logger.info(f"writing file: {filename}")
 
         if test_only:
