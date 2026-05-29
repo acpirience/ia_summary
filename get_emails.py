@@ -1,7 +1,6 @@
 import email
 import imaplib
 from datetime import datetime, timedelta
-from email.header import decode_header
 
 from loguru import logger
 
@@ -55,15 +54,9 @@ def search_and_read_emails(
             continue
 
         # Parse the raw bytes into an email object
-        raw_email: bytearray = data[0][1]
+        raw_email = data[0][1]
         msg = email.message_from_bytes(raw_email)
 
-        # Decode the email subject
-        subject, encoding = decode_header(msg["Subject"])[0]
-        if isinstance(subject, bytes):
-            subject = subject.decode(encoding or "utf-8")
-
-        logger.info(f"Subject: {subject}")
         logger.info(f"From: {msg['From']}")
         logger.info(f"Date: {msg['Date']}")
 
@@ -85,7 +78,7 @@ def search_and_read_emails(
             # If not multipart, just grab the payload
             body = msg.get_payload(decode=True).decode()
 
-        filename: str = get_file_name(mail_from["title"], id, mail_count) + "html"
+        filename: str = get_file_name(mail_from["title"], id, mail_count) + ".html"
         logger.info(f"writing file: {filename}")
 
         if test_only:
