@@ -30,6 +30,7 @@ FROM_ADDRESS: list[dict[str, str]] = [
     {"title": "The Rundown AI", "email": "therundown.ai"},  # news@daily.therundown.ai
     {"title": "Anthyme De Minutora", "email": "laminutora"},  # laminutora@10812296.brevosend.com
     {"title": "Napkin AI", "email": "contact@napkin.ai"},  # contact@napkin.ai
+    {"title": "newline team", "email": "us@fullstack.io"},  # us@fullstack.io
 ]
 
 DAYS_AGO = 1  # Look back period
