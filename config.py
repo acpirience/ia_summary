@@ -19,18 +19,24 @@ if (EMAIL_USER is None) or (EMAIL_PASSWORD is None):
 
 # Filter Criteria
 FROM_ADDRESS: list[dict[str, str]] = [
+    # AI
     {"title": "Alpha Signal", "email": "alphasignal.ai"},  # news@alphasignal.ai
+    {"title": "Anthyme De Minutora", "email": "laminutora"},  # laminutora@10812296.brevosend.com
     {"title": "Byte Byte Go", "email": "bytebytego.com"},  # hi@digest.bytebytego.com
-    {"title": "Google Gemini", "email": "google-gemini"},  # google-gemini-noreply@google.com
-    {"title": "Ollama", "email": "ollama.com"},  # hello@ollama.com
-    {"title": "Python Weekly", "email": "pythonweekly.com"},  # rahul@pythonweekly.com
-    {"title": "Real Python", "email": "realpython.com"},  # info@realpython.com
     {"title": "Superhuman", "email": "superhuman"},  # superhuman@mail.joinsuperhuman.ai
     {"title": "The DeepView", "email": "thedeepview.co"},  # newsletter@thedeepview.co
-    {"title": "The Rundown AI", "email": "therundown.ai"},  # news@daily.therundown.ai
-    {"title": "Anthyme De Minutora", "email": "laminutora"},  # laminutora@10812296.brevosend.com
+    {"title": "The Rundown AI", "email": "daily.therundown.ai"},  # news@daily.therundown.ai
+    # tech
+    {"title": "The Rundown Tech", "email": "technews.therundown.ai"},  # crew@technews.therundown.ai
+    # python
+    {"title": "PyCoder's Weekly", "email": "pycoders.com"},  # admin@pycoders.com
+    {"title": "Python Weekly", "email": "pythonweekly.com"},  # rahul@pythonweekly.com
+    {"title": "Real Python", "email": "realpython.com"},  # info@realpython.com
+    # vendors
+    {"title": "Google Gemini", "email": "google-gemini"},  # google-gemini-noreply@google.com
     {"title": "Napkin AI", "email": "contact@napkin.ai"},  # contact@napkin.ai
     {"title": "newline team", "email": "us@fullstack.io"},  # us@fullstack.io
+    {"title": "Ollama", "email": "ollama.com"},  # hello@ollama.com
 ]
 
 DAYS_AGO = 1  # Look back period
