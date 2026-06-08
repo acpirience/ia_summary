@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from loguru import logger
 
 from config import DAYS_AGO, EMAIL_PASSWORD, EMAIL_USER, IMAP_SERVER
+from database import Database
 
 
 def get_file_name(title: str, id: str, count: int) -> str:
@@ -12,7 +13,7 @@ def get_file_name(title: str, id: str, count: int) -> str:
 
 
 def search_and_read_emails(
-    mail_from: dict[str, str], test_only: bool = False
+    mail_from: dict[str, str], db: Database, test_only: bool = False
 ) -> list[dict[str, str | datetime]] | None:
     mail_found: list[dict[str, str | datetime]] = []
     # 1. Connect to the server and login
@@ -47,6 +48,9 @@ def search_and_read_emails(
     mail_count: int = 0
     for e_id in email_ids:
         id: str = e_id.decode("utf-8")
+        if db.exists_mail(mail_from["title"], id):
+            logger.info(f"Email already processed: {mail_from['title']} - {id}")
+            continue
         mail_count += 1
         # Fetch the email data (RFC822 is the standard email format)
         status, data = mail.fetch(e_id, "(RFC822)")

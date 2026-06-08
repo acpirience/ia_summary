@@ -20,7 +20,7 @@ def main():
     mail_read: list[dict[str, str | datetime]] = []
 
     for mail_from in FROM_ADDRESS:
-        result: list[dict[str, str | datetime]] | None = gmail.search_and_read_emails(mail_from, False)
+        result: list[dict[str, str | datetime]] | None = gmail.search_and_read_emails(mail_from, db, test_only=False)
         if result:
             mail_read.extend(result)
 

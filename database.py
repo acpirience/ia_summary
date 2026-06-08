@@ -1,4 +1,6 @@
 import sqlite3 as sql
+import sys
+from typing import Any
 
 from loguru import logger
 
@@ -12,7 +14,7 @@ class Database:
         self.cursor: sql.Cursor | None = None
 
     def connect(self):
-        self.connection = sql.connect(self.db_name)
+        self.connection: sql.Connection = sql.connect(self.db_name)
         if self.connection:
             logger.info(f"Connected to {self.db_name}")
         else:
@@ -22,6 +24,21 @@ class Database:
         self.cursor.execute(
             "CREATE TABLE IF NOT EXISTS mails (title TEXT, id TEXT, date DATETIME, run_date DATETIME, PRIMARY KEY (title, id))"
         )
+
+    def exists_mail(self, title: str, id: str) -> bool:
+        if not self.connection:
+            logger.error("Database connection is not established.")
+            sys.exit(1)
+
+        cursor: sql.Cursor = self.connection.cursor()
+        cursor.execute("SELECT 1 FROM mails WHERE title = ? AND id = ?", (title, id))
+        value: Any = cursor.fetchone()
+        if value is not None:
+            logger.info(f"Mail found in Database: {title} - {id}")
+        else:
+            logger.info(f"Mail not found in Database: {title} - {id}")
+
+        return value is not None
 
     def disconnect(self):
         if self.connection:
