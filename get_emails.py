@@ -12,6 +12,31 @@ def get_file_name(title: str, id: str, count: int) -> str:
     return f"{title.replace(' ', '')}_{id}_{count:02}"
 
 
+def get_mail_body(msg, mail_from, id, mail_count, test_only):
+    body = ""
+    if msg.is_multipart():
+        # If multipart, iterate through the parts to find text/plain
+        for part in msg.walk():
+            content_type = part.get_content_type()
+            content_disposition = str(part.get("Content-Disposition"))
+
+            if content_type == "text/html" and "attachment" not in content_disposition:
+                body = part.get_payload(decode=True).decode()
+                break
+    else:
+        # If not multipart, just grab the payload
+        body = msg.get_payload(decode=True).decode()
+
+    filename: str = get_file_name(mail_from["title"], id, mail_count) + ".html"
+    logger.info(f"writing file: {filename}")
+
+    if test_only:
+        logger.info("File not written")
+    else:
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(body)
+
+
 def search_and_read_emails(
     mail_from: dict[str, str], db: Database, test_only: bool = False
 ) -> list[dict[str, str | datetime]] | None:
@@ -68,28 +93,7 @@ def search_and_read_emails(
         mail_found.append(mail_read)
 
         # Extract the body of the email
-        body = ""
-        if msg.is_multipart():
-            # If multipart, iterate through the parts to find text/plain
-            for part in msg.walk():
-                content_type = part.get_content_type()
-                content_disposition = str(part.get("Content-Disposition"))
-
-                if content_type == "text/html" and "attachment" not in content_disposition:
-                    body = part.get_payload(decode=True).decode()
-                    break
-        else:
-            # If not multipart, just grab the payload
-            body = msg.get_payload(decode=True).decode()
-
-        filename: str = get_file_name(mail_from["title"], id, mail_count) + ".html"
-        logger.info(f"writing file: {filename}")
-
-        if test_only:
-            logger.info("File not written")
-        else:
-            with open(filename, "w", encoding="utf-8") as f:
-                f.write(body)
+        get_mail_body(msg, mail_from, id, mail_count, test_only)
 
         logger.info("-" * 50)
 
