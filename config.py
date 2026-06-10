@@ -29,6 +29,7 @@ FROM_ADDRESS: list[dict[str, str]] = [
     # tech
     {"title": "The Rundown Tech", "email": "technews.therundown.ai"},  # crew@technews.therundown.ai
     {"title": "TLDR Dev", "email": "tldrnewsletter.com"},  # dan@tldrnewsletter.com
+    {"title": "daily.dev", "email": "daily.dev"},  # informer@daily.dev
     # python
     {"title": "PyCoder's Weekly", "email": "pycoders.com"},  # admin@pycoders.com
     {"title": "Python Weekly", "email": "pythonweekly.com"},  # rahul@pythonweekly.com
