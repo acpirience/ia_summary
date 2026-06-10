@@ -94,6 +94,7 @@ def search_and_read_emails(
 
         # Extract the body of the email
         get_mail_body(msg, mail_from, id, mail_count, test_only)
+        db.add_mail(mail_from["title"], id, msg["Date"])
 
         logger.info("-" * 50)
 

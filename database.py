@@ -1,3 +1,4 @@
+import datetime
 import sqlite3 as sql
 import sys
 from typing import Any
@@ -19,8 +20,8 @@ class Database:
             logger.info(f"Connected to {self.db_name}")
         else:
             logger.error(f"Failed to connect to {self.db_name}")
-            return
-        self.cursor = self.connection.cursor()
+            sys.exit(1)
+        self.cursor: sql.Cursor = self.connection.cursor()
         self.cursor.execute(
             "CREATE TABLE IF NOT EXISTS mails (title TEXT, id TEXT, date DATETIME, run_date DATETIME, PRIMARY KEY (title, id))"
         )
@@ -39,6 +40,19 @@ class Database:
             logger.info(f"Mail not found in Database: {title} - {id}")
 
         return value is not None
+
+    def add_mail(self, title: str, id: str, date: datetime.datetime):
+        if not self.connection:
+            logger.error("Database connection is not established.")
+            sys.exit(1)
+
+        cursor: sql.Cursor = self.connection.cursor()
+        cursor.execute(
+            "INSERT INTO mails (title, id, date, run_date) VALUES (?, ?, ?, DATETIME('now'))",
+            (title, id, date),
+        )
+        self.connection.commit()
+        logger.info(f"Mail added to Database: {title} - {id}")
 
     def disconnect(self):
         if self.connection:
