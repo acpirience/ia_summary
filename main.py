@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 from loguru import logger
@@ -6,6 +5,7 @@ from loguru import logger
 import get_emails as gmail
 from config import FROM_ADDRESS
 from database import Database
+from temp_dir import create_temp_dir, delete_html_files
 
 
 def main():
@@ -13,10 +13,8 @@ def main():
     db: Database = Database()
     db.connect()
 
-    if not os.path.exists("generated_files"):
-        os.makedirs("generated_files")
-    os.chdir("generated_files")
-    logger.info(f"Current Directory is = {os.getcwd()}")
+    create_temp_dir("generated_files")
+
     mail_read: list[dict[str, str | datetime]] = []
 
     for mail_from in FROM_ADDRESS:
@@ -29,6 +27,7 @@ def main():
         logger.info(f"{mail['title']} - {mail['id']} - {mail['date']}")
 
     db.disconnect()
+    delete_html_files()
 
 
 if __name__ == "__main__":
