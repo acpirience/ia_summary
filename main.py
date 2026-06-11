@@ -5,6 +5,7 @@ from loguru import logger
 import get_emails as gmail
 from config import FROM_ADDRESS
 from database import Database
+from ia import summarize_html_files
 from temp_dir import create_temp_dir, delete_html_files
 
 
@@ -22,11 +23,15 @@ def main():
         if result:
             mail_read.extend(result)
 
-    logger.info(f"emails read: {len(mail_read)}")
-    for mail in mail_read:
-        logger.info(f"{mail['title']} - {mail['id']} - {mail['date']}")
-
     db.disconnect()
+
+    logger.info(f"emails read: {len(mail_read)}")
+
+    if len(mail_read) > 0:
+        for mail in mail_read:
+            logger.info(f"{mail['title']} - {mail['id']} - {mail['date']}")
+        summarize_html_files()  # summary by Gemini
+
     delete_html_files()
 
 
