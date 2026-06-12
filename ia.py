@@ -16,7 +16,7 @@ def summarize_html_files() -> None:
     # Initialize the GenAI Client by explicitly passing your pre-existing API key variable
     client: genai.Client = genai.Client(api_key=GOOGLE_API_KEY)
 
-    print("Uploading HTML files to Gemini...")
+    logger.info("Uploading HTML files to Gemini...")
     target_dir: Path = Path(Path.cwd())
     uploaded_file_refs: list[Any] = []
 
@@ -47,7 +47,7 @@ def summarize_html_files() -> None:
         response: Any = client.models.generate_content(model="gemini-2.5-flash", contents=[prompt, *uploaded_file_refs])
 
         # 3. Save the output to a Markdown document using pathlib
-        output_file: Path = Path(f"combined_summary{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.md")
+        output_file: Path = Path(f"combined_summary_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.md")
         if response.text:
             output_file.write_text(response.text, encoding="utf-8")
             logger.info(f"\nSuccess! Combined summary saved to: {output_file}")

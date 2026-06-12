@@ -55,7 +55,7 @@ def search_and_read_emails(
     # 3. Construct the IMAP search query
     # IMAP queries use the format: (FROM "email" SINCE "date")
     search_criterion = f'(FROM "{mail_from["email"]}" SINCE "{since_date}")'
-    print(f"Searching with criteria: {search_criterion}")
+    logger.info(f"Searching with criteria: {search_criterion}")
 
     status, messages = mail.search(None, search_criterion)
 
