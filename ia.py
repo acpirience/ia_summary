@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -45,7 +46,7 @@ def summarize_html_files() -> None:
         response: Any = client.models.generate_content(model="gemini-2.5-flash", contents=[prompt, *uploaded_file_refs])
 
         # 3. Save the output to a Markdown document using pathlib
-        output_file: Path = Path("combined_summary.md")
+        output_file: Path = Path(f"combined_summary{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.md")
         if response.text:
             output_file.write_text(response.text, encoding="utf-8")
             logger.info(f"\nSuccess! Combined summary saved to: {output_file}")

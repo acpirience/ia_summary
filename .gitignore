@@ -140,7 +140,4 @@ cython_debug/
 # Databse files
 *.db
 
-#generated files
-combined_summary.md
-
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Python,vscode,ruff,uv,pytest
