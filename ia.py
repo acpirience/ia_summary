@@ -31,7 +31,8 @@ def summarize_html_files() -> None:
         You are an expert technical writer. I have uploaded multiple HTML files. 
         Please extract the core content from each file, ignoring boilerplate HTML structures, scripts, or styling.
         
-        Provide a comprehensive, unified summary of all these documents combined into one cohesive report. 
+        Provide a comprehensive, unified summary of all these documents combined into one cohesive report.
+        start directly with the summary, without any introductory text.
         If there are links in the html documents, follow them to add substance to the summary.
         The order of the informations should be determined by the number of time it is mentioned across the documents.
         If a piece of information is mentioned in multiple documents, it should be prioritized higher in the summary.
