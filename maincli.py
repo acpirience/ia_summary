@@ -11,7 +11,6 @@ STEPS: dict[int, str] = {
 app: typer.Typer = typer.Typer()
 
 
-@app.command()
 def start():
     restart(1)
 
@@ -36,6 +35,14 @@ def restart(step: int):
                 pass  # Deleting HTML files is handled in maincli.py
 
         step += 1
+
+
+@app.callback(invoke_without_command=True)
+def main(ctx: typer.Context):
+    """Callback that triggers on the base command."""
+    # ctx.invoked_subcommand is None if the user didn't type 'restart'
+    if ctx.invoked_subcommand is None:
+        start()
 
 
 if __name__ == "__main__":
