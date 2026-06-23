@@ -36,4 +36,5 @@ def main():
 
 
 if __name__ == "__main__":
+    logger.warning("Please use maincli.py instead of running this file directly.")
     main()
