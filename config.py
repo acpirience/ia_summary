@@ -1,7 +1,4 @@
-import sys
-
 from dotenv import dotenv_values
-from loguru import logger
 
 # Load .env
 config: dict[str, str | None] = dotenv_values(".env")
@@ -14,8 +11,7 @@ EMAIL_USER: str | None = config["EMAIL_USER"]
 EMAIL_PASSWORD: str | None = config["EMAIL_PASSWORD"]
 
 if (EMAIL_USER is None) or (EMAIL_PASSWORD is None):
-    logger.critical("EMAIL_USER or EMAIL_PASSWORD not found in .env file")
-    sys.exit(1)
+    raise ValueError("EMAIL_USER or EMAIL_PASSWORD not found in .env file")
 
 # Filter Criteria
 FROM_ADDRESS: list[dict[str, str]] = [

@@ -1,6 +1,5 @@
 import datetime
 import sqlite3 as sql
-import sys
 from typing import Any
 
 from loguru import logger
@@ -19,8 +18,8 @@ class Database:
         if self.connection:
             logger.info(f"Connected to {self.db_name}")
         else:
-            logger.error(f"Failed to connect to {self.db_name}")
-            sys.exit(1)
+            raise ConnectionError(f"Failed to connect to {self.db_name}")
+
         self.cursor: sql.Cursor = self.connection.cursor()
         self.cursor.execute(
             "CREATE TABLE IF NOT EXISTS mails (title TEXT, id TEXT, date DATETIME, run_date DATETIME, status TEXT, PRIMARY KEY (title, id))"
@@ -28,8 +27,7 @@ class Database:
 
     def exists_mail(self, title: str, id: str) -> bool:
         if not self.connection:
-            logger.error("Database connection is not established.")
-            sys.exit(1)
+            raise ConnectionError("Database connection is not established.")
 
         cursor: sql.Cursor = self.connection.cursor()
         cursor.execute("SELECT 1 FROM mails WHERE title = ? AND id = ?", (title, id))
@@ -43,8 +41,7 @@ class Database:
 
     def add_mail(self, title: str, id: str, date: datetime.datetime):
         if not self.connection:
-            logger.error("Database connection is not established.")
-            sys.exit(1)
+            raise ConnectionError("Database connection is not established.")
 
         cursor: sql.Cursor = self.connection.cursor()
         cursor.execute(
