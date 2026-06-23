@@ -23,7 +23,7 @@ class Database:
             sys.exit(1)
         self.cursor: sql.Cursor = self.connection.cursor()
         self.cursor.execute(
-            "CREATE TABLE IF NOT EXISTS mails (title TEXT, id TEXT, date DATETIME, run_date DATETIME, PRIMARY KEY (title, id))"
+            "CREATE TABLE IF NOT EXISTS mails (title TEXT, id TEXT, date DATETIME, run_date DATETIME, status TEXT, PRIMARY KEY (title, id))"
         )
 
     def exists_mail(self, title: str, id: str) -> bool:
