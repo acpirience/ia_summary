@@ -39,7 +39,7 @@ FROM_ADDRESS: list[dict[str, str]] = [
     {"title": "Ollama", "email": "ollama.com"},  # hello@ollama.com
 ]
 
-DAYS_AGO = 1  # Look back period
+DAYS_AGO = 2  # Look back period
 
 # --- DATABSE CONFIGURATION ---
 DB_NAME: str = "IA_mails.db"
