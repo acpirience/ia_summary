@@ -8,7 +8,7 @@ from loguru import logger
 from config import GOOGLE_API_KEY
 
 
-def summarize_html_files() -> None:
+def summarize_html_files() -> Path | None:
     """
     Uploads a list of HTML files to the Gemini Files API using an explicit API key,
     generates a consolidated Markdown summary, and cleans up the remote files.
@@ -64,3 +64,5 @@ def summarize_html_files() -> None:
                 logger.info(f"Deleted {ref_to_delete.name}")
             except Exception as e:
                 logger.error(f"Failed to delete {ref_to_delete.name}: {e}")
+
+        return output_file if response.text else None
