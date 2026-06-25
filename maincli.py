@@ -6,7 +6,7 @@ from database import Database
 from temp_dir import create_temp_dir, delete_html_files
 
 STEPS: dict[int, str] = {
-    1: "Initialisation / cleanup",
+    1: "cleanup HTML files",
     2: "Searching and reading emails",
     3: "Summarizing HTML files",
     4: "Deleting HTML files",
@@ -39,7 +39,9 @@ def restart(step: int):
     create_temp_dir("generated_files")
     pre_init_duration.stop()
     durations[0] = pre_init_duration.elapsed_time()
-    logger.info(f"Pre-init duration: {durations[0]:.4f} seconds")
+    logger.info(
+        f"Pre-init duration: {durations[0]:.4f} seconds (total duration: {sum(durations.values()):.4f} seconds)\n"
+    )
 
     if step <= 0 or step > len(STEPS):
         logger.error(f"Invalid step number: {step}. Valid steps are 1 to {len(STEPS)}.")
@@ -47,7 +49,7 @@ def restart(step: int):
     logger.info(f"(Re)Starting at step {step}...")
 
     while step <= len(STEPS):
-        title_log(f"{step} {STEPS[step]}")
+        title_log(f"{step}) {STEPS[step]}")
         match step:
             case 1:
                 init_duration: Chrono = Chrono()
@@ -55,7 +57,9 @@ def restart(step: int):
                 initialization()
                 init_duration.stop()
                 durations[step] = init_duration.elapsed_time()
-                logger.info(f"Initialization duration: {durations[step]:.4f} seconds")
+                logger.info(
+                    f"Initialization duration: {durations[step]:.4f} seconds (total duration: {sum(durations.values()):.4f} seconds)\n"
+                )
 
             case 2:
                 pass  # Searching and reading emails is handled in maincli.py
