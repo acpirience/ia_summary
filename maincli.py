@@ -1,3 +1,4 @@
+import traceback
 from datetime import datetime
 
 import typer
@@ -49,17 +50,24 @@ def read_all_mails_from_mailing_lists(db: Database) -> list[dict[str, str | date
 
 
 @app.command()
-def restart(step: int):
+def restart(step: int = 0):
     # pre-init: database creation/connection - temp folder creation / chg dir
-    durations: dict[int, float] = {}
-    pre_init_duration: Chrono = Chrono()
-    pre_init_duration.start()
-    db: Database = Database()
-    db.connect()
-    create_temp_dir("generated_files")
-    pre_init_duration.stop()
-    durations[0] = pre_init_duration.elapsed_time()
-    elapsed_time_log(durations, 0)
+    try:
+        durations: dict[int, float] = {}
+        pre_init_duration: Chrono = Chrono()
+        pre_init_duration.start()
+        db: Database = Database()
+        db.connect()
+        create_temp_dir("generated_files")
+        pre_init_duration.stop()
+        durations[0] = pre_init_duration.elapsed_time()
+        elapsed_time_log(durations, 0)
+    except Exception as e:
+        logger.error(f"Error occurred during step 0 : {STEPS[0]}")
+        logger.error(f"Exception: {e}")
+        logger.error(traceback.format_exc())
+        logger.info("This should not happen. please correct and restart via python maincli.py or uv run maincli.py")
+        return
 
     if step <= 0 or step > max(STEPS):
         logger.error(f"Invalid step number: {step}. Valid steps are 1 to {len(STEPS)}.")
@@ -81,6 +89,13 @@ def restart(step: int):
                 search_duration: Chrono = Chrono()
                 search_duration.start()
                 mail_read: list[dict[str, str | datetime]] = read_all_mails_from_mailing_lists(db)
+
+                logger.info(f"emails read: {len(mail_read)}")
+
+                if len(mail_read) > 0:
+                    for mail in mail_read:
+                        logger.info(f"{mail['title']} - {mail['id']} - {mail['date']}")
+
                 search_duration.stop()
                 durations[step] = search_duration.elapsed_time()
                 elapsed_time_log(durations, step)
