@@ -1,7 +1,11 @@
+from datetime import datetime
+
 import typer
 from loguru import logger
 
+import get_emails as gmail
 from chrono import Chrono
+from config import FROM_ADDRESS
 from database import Database
 from temp_dir import create_temp_dir, delete_html_files
 
@@ -21,9 +25,9 @@ def title_log(message: str):
     logger.info("=" * len(message))
 
 
-def elapsed_time_log(durationq: dict[int, float], step: int):
+def elapsed_time_log(duration: dict[int, float], step: int):
     logger.info(
-        f"Step {step} duration: {durationq[step]:.4f} seconds (total duration: {sum(durationq.values()):.4f} seconds)\n"
+        f"Step {step} duration: {duration[step]:.4f} seconds (total duration: {sum(duration.values()):.4f} seconds)\n"
     )
 
 
@@ -33,6 +37,15 @@ def start():
 
 def initialization() -> None:
     delete_html_files()  # Cleanup any existing HTML files
+
+
+def read_all_mails_from_mailing_lists(db: Database) -> list[dict[str, str | datetime]]:
+    mail_read: list[dict[str, str | datetime]] = []
+    for mail_from in FROM_ADDRESS:
+        result: list[dict[str, str | datetime]] | None = gmail.search_and_read_emails(mail_from, db, test_only=False)
+        if result:
+            mail_read.extend(result)
+    return mail_read
 
 
 @app.command()
@@ -65,7 +78,12 @@ def restart(step: int):
                 elapsed_time_log(durations, step)
 
             case 2:
-                pass  # Searching and reading emails is handled in maincli.py
+                search_duration: Chrono = Chrono()
+                search_duration.start()
+                mail_read: list[dict[str, str | datetime]] = read_all_mails_from_mailing_lists(db)
+                search_duration.stop()
+                durations[step] = search_duration.elapsed_time()
+                elapsed_time_log(durations, step)
             case 3:
                 pass  # Summarizing HTML files is handled in maincli.py
             case 4:
