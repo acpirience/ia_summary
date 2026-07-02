@@ -28,7 +28,7 @@ def get_mail_body(msg, mail_from, id, mail_count, test_only):
         body = msg.get_payload(decode=True).decode()
 
     filename: str = get_file_name(mail_from["title"], id, mail_count) + ".html"
-    logger.info(f"writing file: {filename}")
+    logger.info(f"Saving email as file: {filename}")
 
     if test_only:
         logger.info("File not written")
@@ -42,7 +42,7 @@ def search_and_read_emails(
 ) -> list[dict[str, str | datetime]] | None:
     mail_found: list[dict[str, str | datetime]] = []
     # 1. Connect to the server and login
-    logger.info("Connecting to server...")
+    logger.info("Connecting to gmail server")
     mail = imaplib.IMAP4_SSL(IMAP_SERVER)
     mail.login(EMAIL_USER, EMAIL_PASSWORD)  # ty: ignore
 
@@ -55,7 +55,7 @@ def search_and_read_emails(
     # 3. Construct the IMAP search query
     # IMAP queries use the format: (FROM "email" SINCE "date")
     search_criterion = f'(FROM "{mail_from["email"]}" SINCE "{since_date}")'
-    logger.info(f"Searching with criteria: {search_criterion}")
+    logger.info(f"Searching mails with criteria: {search_criterion}")
 
     status, messages = mail.search(None, search_criterion)
 
@@ -65,7 +65,7 @@ def search_and_read_emails(
 
     # mail.search returns a list of space-separated IDs
     email_ids = messages[0].split()
-    logger.info(f"Found {len(email_ids)} emails matching criteria.\n")
+    logger.info(f"Found {len(email_ids)} email(s) matching criteria.\n")
     if len(email_ids) == 0:
         return
 
@@ -74,7 +74,7 @@ def search_and_read_emails(
     for e_id in email_ids:
         id: str = e_id.decode("utf-8")
         if db.exists_mail(mail_from["title"], id):
-            logger.info(f"Email already processed: {mail_from['title']} - {id}")
+            logger.info(f"Email already processedin database: {mail_from['title']} - {id}")
             continue
         mail_count += 1
         # Fetch the email data (RFC822 is the standard email format)
@@ -86,8 +86,7 @@ def search_and_read_emails(
         raw_email = data[0][1]
         msg = email.message_from_bytes(raw_email)
 
-        logger.info(f"From: {msg['From']}")
-        logger.info(f"Date: {msg['Date']}")
+        logger.info(f"From: {msg['From']} / Date: {msg['Date']}")
 
         mail_read: dict[str, str | datetime] = {"title": mail_from["title"], "id": id, "date": msg["Date"]}
         mail_found.append(mail_read)
@@ -95,8 +94,6 @@ def search_and_read_emails(
         # Extract the body of the email
         get_mail_body(msg, mail_from, id, mail_count, test_only)
         db.add_mail(mail_from["title"], id, msg["Date"])
-
-        logger.info("-" * 50)
 
     # 5. Logout safely
     mail.close()

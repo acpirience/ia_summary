@@ -36,8 +36,9 @@ def start():
     restart(1)
 
 
-def initialization() -> None:
+def initialization(db: Database) -> None:
     delete_html_files()  # Cleanup any existing HTML files
+    db.delete_generated_mails()
 
 
 def read_all_mails_from_mailing_lists(db: Database) -> list[dict[str, str | datetime]]:
@@ -66,7 +67,7 @@ def restart(step: int = 0):
         logger.error(f"Error occurred during step 0 : {STEPS[0]}")
         logger.error(f"Exception: {e}")
         logger.error(traceback.format_exc())
-        logger.info("This should not happen. please correct and restart via python maincli.py or uv run maincli.py")
+        logger.warning("This should not happen. please correct and restart via python maincli.py or uv run maincli.py")
         return
 
     if step <= 0 or step > max(STEPS):
@@ -78,27 +79,45 @@ def restart(step: int = 0):
         title_log(f"{step}) {STEPS[step]}")
         match step:
             case 1:
-                init_duration: Chrono = Chrono()
-                init_duration.start()
-                initialization()
-                init_duration.stop()
-                durations[step] = init_duration.elapsed_time()
-                elapsed_time_log(durations, step)
+                try:
+                    init_duration: Chrono = Chrono()
+                    init_duration.start()
+                    initialization(db)
+                    init_duration.stop()
+                    durations[step] = init_duration.elapsed_time()
+                    elapsed_time_log(durations, step)
+                except Exception as e:
+                    logger.error(f"Error occurred during step {step} : {STEPS[step]}")
+                    logger.error(f"Exception: {e}")
+                    logger.error(traceback.format_exc())
+                    logger.warning(
+                        "This should not happen. please correct and restart via python maincli.py or uv run maincli.py"
+                    )
+                    return
 
             case 2:
-                search_duration: Chrono = Chrono()
-                search_duration.start()
-                mail_read: list[dict[str, str | datetime]] = read_all_mails_from_mailing_lists(db)
+                try:
+                    search_duration: Chrono = Chrono()
+                    search_duration.start()
+                    mail_read: list[dict[str, str | datetime]] = read_all_mails_from_mailing_lists(db)
 
-                logger.info(f"emails read: {len(mail_read)}")
+                    logger.info(f"emails read: {len(mail_read)}")
 
-                if len(mail_read) > 0:
-                    for mail in mail_read:
-                        logger.info(f"{mail['title']} - {mail['id']} - {mail['date']}")
+                    if len(mail_read) > 0:
+                        for mail in mail_read:
+                            logger.info(f"- {mail['title']} - {mail['id']} - {mail['date']}")
 
-                search_duration.stop()
-                durations[step] = search_duration.elapsed_time()
-                elapsed_time_log(durations, step)
+                    search_duration.stop()
+                    durations[step] = search_duration.elapsed_time()
+                    elapsed_time_log(durations, step)
+                except Exception as e:
+                    logger.error(f"Error occurred during step {step} : {STEPS[step]}")
+                    logger.error(f"Exception: {e}")
+                    logger.error(traceback.format_exc())
+                    logger.warning(
+                        "This should not happen. please correct and restart via python maincli.py or uv run maincli.py"
+                    )
+                    return
             case 3:
                 pass  # Summarizing HTML files is handled in maincli.py
             case 4:

@@ -45,11 +45,21 @@ class Database:
 
         cursor: sql.Cursor = self.connection.cursor()
         cursor.execute(
-            "INSERT INTO mails (title, id, date, run_date) VALUES (?, ?, ?, DATETIME('now'))",
+            "INSERT INTO mails (title, id, date, run_date, status) VALUES (?, ?, ?, DATETIME('now'), 'GENERATED')",
             (title, id, date),
         )
         self.connection.commit()
         logger.info(f"Mail added to Database: {title} - {id}")
+
+    def delete_generated_mails(self):
+        if not self.connection:
+            raise ConnectionError("Database connection is not established.")
+        cursor: sql.Cursor = self.connection.cursor()
+        cursor.execute(
+            "DELETE FROM MAILS WHERE status = 'GENERATED'",
+        )
+        self.connection.commit()
+        logger.info("Generated mails deleted from Database")
 
     def disconnect(self):
         if self.connection:
