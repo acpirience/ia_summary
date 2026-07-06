@@ -101,7 +101,7 @@ def restart(step: int = 0):
                     search_duration.start()
                     mail_read: list[dict[str, str | datetime]] = read_all_mails_from_mailing_lists(db)
 
-                    logger.info(f"emails read: {len(mail_read)}")
+                    logger.info(f"Html files generated: {len(mail_read)}")
 
                     if len(mail_read) > 0:
                         for mail in mail_read:
