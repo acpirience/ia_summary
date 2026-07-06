@@ -8,6 +8,7 @@ import get_emails as gmail
 from chrono import Chrono
 from config import FROM_ADDRESS
 from database import Database
+from ia import summarize_html_files
 from temp_dir import create_temp_dir, delete_html_files
 
 STEPS: dict[int, str] = {
@@ -119,9 +120,37 @@ def restart(step: int = 0):
                     )
                     return
             case 3:
-                pass  # Summarizing HTML files is handled in maincli.py
+                try:
+                    html_duration: Chrono = Chrono()
+                    html_duration.start()
+                    summarize_html_files()  # summary by Gemini
+                    html_duration.stop()
+                    durations[step] = html_duration.elapsed_time()
+                    elapsed_time_log(durations, step)
+                except Exception as e:
+                    logger.error(f"Error occurred during step {step} : {STEPS[step]}")
+                    logger.error(f"Exception: {e}")
+                    logger.error(traceback.format_exc())
+                    logger.warning(
+                        "You should relaunch directly step 3: Please correct and restart via python maincli.py -restart 3 or uv run maincli.py -restart 3"
+                    )
+                    return
             case 4:
-                pass  # Deleting HTML files is handled in maincli.py
+                try:
+                    delete_duration: Chrono = Chrono()
+                    delete_duration.start()
+                    delete_html_files()
+                    delete_duration.stop()
+                    durations[step] = delete_duration.elapsed_time()
+                    elapsed_time_log(durations, step)
+                except Exception as e:
+                    logger.error(f"Error occurred during step {step} : {STEPS[step]}")
+                    logger.error(f"Exception: {e}")
+                    logger.error(traceback.format_exc())
+                    logger.warning(
+                        "You should relaunch directly step 4: Please correct and restart via python maincli.py -restart 4 or uv run maincli.py -restart 4"
+                    )
+                    return
 
         step += 1
 
