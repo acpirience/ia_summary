@@ -2,6 +2,7 @@ import traceback
 from datetime import datetime
 
 import typer
+from git_ops import git_add, git_commit_and_push, git_status
 from loguru import logger
 
 import get_emails as gmail
@@ -17,6 +18,7 @@ STEPS: dict[int, str] = {
     2: "Searching and reading emails",
     3: "Summarizing HTML files",
     4: "Deleting HTML files",
+    5: "Git operations",
 }
 
 app: typer.Typer = typer.Typer()
@@ -132,7 +134,7 @@ def restart(step: int = 0):
                     logger.error(f"Exception: {e}")
                     logger.error(traceback.format_exc())
                     logger.warning(
-                        "You should relaunch directly step 3: Please correct and restart via python maincli.py -restart 3 or uv run maincli.py -restart 3"
+                        "You should relaunch directly step 3: Please correct and restart via python maincli.py -restart --step 3 or uv run maincli.py -restart 3"
                     )
                     return
             case 4:
@@ -148,7 +150,28 @@ def restart(step: int = 0):
                     logger.error(f"Exception: {e}")
                     logger.error(traceback.format_exc())
                     logger.warning(
-                        "You should relaunch directly step 4: Please correct and restart via python maincli.py -restart 4 or uv run maincli.py -restart 4"
+                        "You should relaunch directly step 4: Please correct and restart via python maincli.py -restart --step 4 or uv run maincli.py -restart --step 4"
+                    )
+                    return
+            case 5:
+                try:
+                    git_duration: Chrono = Chrono()
+                    git_duration.start()
+                    file_to_add: str | None = git_status()
+                    if not file_to_add:
+                        logger.warning("No .md file found to add to git. Is this normal ?")
+                    else:
+                        git_add(file_to_add)
+                        git_commit_and_push()
+                    git_duration.stop()
+                    durations[step] = git_duration.elapsed_time()
+                    elapsed_time_log(durations, step)
+                except Exception as e:
+                    logger.error(f"Error occurred during step {step} : {STEPS[step]}")
+                    logger.error(f"Exception: {e}")
+                    logger.error(traceback.format_exc())
+                    logger.warning(
+                        "You should relaunch directly step 5: Please correct and restart via python maincli.py -restart --step 5 or uv run maincli.py -restart --step 5"
                     )
                     return
 
