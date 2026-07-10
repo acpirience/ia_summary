@@ -13,7 +13,7 @@ def git_status() -> str | None:
         # Access the captured logs
         logs: str = result.stdout
         logger.info("--- Git Status Output ---")
-        log_lines: list[str] = logs.splitlines()
+        log_lines: list[str] = [str(line) for line in logs.splitlines()]
         for line in log_lines:
             logger.info(line)
             if line.rstrip().endswith(".md"):
@@ -46,8 +46,13 @@ def git_status() -> str | None:
 
 def git_add(file_path: str):
     try:
-        subprocess.run(["git", "add", file_path], check=True)
-        logger.info(f"File added to git: '{file_path}'")
+        result = subprocess.run(["git", "add", file_path], capture_output=True, text=True, check=True)
+        logs: str = result.stdout or ""
+        logger.info(f"--- Git add {file_path} ---")
+        log_lines: list[str] = [str(line) for line in logs.splitlines()]
+        for line in log_lines:
+            logger.info(line)
+
     except subprocess.CalledProcessError as e:
         logger.error(f"Failed to add file to git: {file_path}")
         logger.error(e.stderr)
@@ -55,10 +60,28 @@ def git_add(file_path: str):
 
 def git_commit_and_push():
     try:
-        subprocess.run(["git", "commit", "-m", f"{datetime.now().strftime('%Y-%m-%d')} run"], check=True)
-        logger.info("Changes committed to git.")
-        subprocess.run(["git", "push"], check=True)
-        logger.info("Changes pushed to remote repository.")
+        result = subprocess.run(
+            ["git", "commit", "-m", f"{datetime.now().strftime('%Y-%m-%d')} run"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        logs: str = result.stdout or ""
+        logger.info(f"--- Git commit -m '{datetime.now().strftime('%Y-%m-%d')} run' ---")
+        log_lines: list[str] = [str(line) for line in logs.splitlines()]
+        for line in log_lines:
+            logger.info(line)
+        subprocess.run(
+            ["git", "push"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        logs: str = result.stdout or ""
+        logger.info("--- Git push ---")
+        log_lines: list[str] = [str(line) for line in logs.splitlines()]
+        for line in log_lines:
+            logger.info(line)
     except subprocess.CalledProcessError as e:
         logger.error("Failed to commit or push changes to git.")
         logger.error(e.stderr)
