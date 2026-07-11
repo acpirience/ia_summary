@@ -2,14 +2,15 @@ import traceback
 from datetime import datetime
 
 import typer
-from git_ops import git_add, git_commit_and_push, git_status
 from loguru import logger
 
 import get_emails as gmail
 from chrono import Chrono
 from config import FROM_ADDRESS
 from database import Database
+from git_ops import git_add, git_commit_and_push, git_status
 from ia import summarize_html_files
+from log_ops import setup_logging
 from temp_dir import create_temp_dir, delete_html_files
 
 STEPS: dict[int, str] = {
@@ -187,4 +188,5 @@ def main(ctx: typer.Context):
 
 
 if __name__ == "__main__":
+    setup_logging()
     app()
