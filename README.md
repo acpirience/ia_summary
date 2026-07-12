@@ -21,6 +21,6 @@ le program expects a .env file containing the following definitions:
 EMAIL_USER="xxx@yyy.com"
 # your email password (the program accesses via IMAP)
 EMAIL_PASSWORD="gjfgmlez_irgjdfjg"
-# Your Google IA API key [Get key](https://aistudio.google.com/app/api-keys)
+# Your Google IA API key: https://aistudio.google.com/app/api-keys
 GOOGLE_API_KEY="dfgqfdgqfùmlgqdmlfgkùmf-dfqdfsr"
 ```
