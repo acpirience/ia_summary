@@ -1,8 +1,18 @@
 # IA_summary
 
 ```python
-uv run main.py
+uv run maincli.py
+python maincli.py
+
 ```
+or if you want to restart to specific step
+
+```python
+uv run maincli.py -restart --step 5
+python maincli.py -restart --step 5
+
+```
+
 
 le program expects a .env file containing the following definitions:
 

@@ -135,7 +135,7 @@ def restart(step: int = 0):
                     logger.error(f"Exception: {e}")
                     logger.error(traceback.format_exc())
                     logger.warning(
-                        "You should relaunch directly step 3: Please correct and restart via python maincli.py -restart --step 3 or uv run maincli.py -restart 3"
+                        "You should relaunch directly step 3: Please correct and restart via python maincli.py -restart --step 3 or uv run maincli.py -restart --step3"
                     )
                     return
             case 4:
