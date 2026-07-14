@@ -20,6 +20,7 @@ STEPS: dict[int, str] = {
     3: "Summarizing HTML files",
     4: "Deleting HTML files",
     5: "Git operations",
+    6: "Stats",
 }
 
 app: typer.Typer = typer.Typer()
@@ -34,6 +35,30 @@ def elapsed_time_log(duration: dict[int, float], step: int):
     logger.info(
         f"Step {step} duration: {duration[step]:.4f} seconds (total duration: {sum(duration.values()):.4f} seconds)\n"
     )
+
+
+def show_stats(durations: dict[int, float]):
+    durations = {
+        0: 0.01397889998042956,
+        1: 0.1464830000186339,
+        2: 31.57685939996736,
+        3: 460.80753130000085,
+        4: 0.03012260003015399,
+        5: 4.468728699954227,
+    }
+    logger.warning(durations)
+    sum_dur: float = sum(durations.values()) if durations else 0
+    logger.info("=" * 20)
+    for step, description in STEPS.items():
+        if step in durations:
+            logger.info(
+                f"{step}: {description:<30} - Duration: {durations[step]:.4f} seconds ({durations[step] / sum_dur * 100:.2f}%)"
+            )
+        else:
+            if step != 6:
+                logger.info(f"{step}: {description:<30} - Duration: Not executed")
+    logger.info("=" * 20)
+    logger.info(f"Total Execution Time: {sum(durations.values()):.4f} seconds")
 
 
 def start():
@@ -135,7 +160,7 @@ def restart(step: int = 0):
                     logger.error(f"Exception: {e}")
                     logger.error(traceback.format_exc())
                     logger.warning(
-                        "You should relaunch directly step 3: Please correct and restart via python maincli.py -restart --step 3 or uv run maincli.py -restart --step3"
+                        "You should relaunch directly step 3: Please correct and restart via python maincli.py restart --step 3 or uv run maincli.py restart --step3"
                     )
                     return
             case 4:
@@ -151,7 +176,7 @@ def restart(step: int = 0):
                     logger.error(f"Exception: {e}")
                     logger.error(traceback.format_exc())
                     logger.warning(
-                        "You should relaunch directly step 4: Please correct and restart via python maincli.py -restart --step 4 or uv run maincli.py -restart --step 4"
+                        "You should relaunch directly step 4: Please correct and restart via python maincli.py restart --step 4 or uv run maincli.py restart --step 4"
                     )
                     return
             case 5:
@@ -172,7 +197,18 @@ def restart(step: int = 0):
                     logger.error(f"Exception: {e}")
                     logger.error(traceback.format_exc())
                     logger.warning(
-                        "You should relaunch directly step 5: Please correct and restart via python maincli.py -restart --step 5 or uv run maincli.py -restart --step 5"
+                        "You should relaunch directly step 5: Please correct and restart via python maincli.py restart --step 5 or uv run maincli.py -restart --step 5"
+                    )
+                    return
+            case 6:
+                try:
+                    show_stats(durations)
+                except Exception as e:
+                    logger.error(f"Error occurred during step {step} : {STEPS[step]}")
+                    logger.error(f"Exception: {e}")
+                    logger.error(traceback.format_exc())
+                    logger.warning(
+                        "This should not happen. please correct and restart via python maincli.py or uv run maincli.py"
                     )
                     return
 
