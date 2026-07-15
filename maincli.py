@@ -38,15 +38,6 @@ def elapsed_time_log(duration: dict[int, float], step: int):
 
 
 def show_stats(durations: dict[int, float]):
-    durations = {
-        0: 0.01397889998042956,
-        1: 0.1464830000186339,
-        2: 31.57685939996736,
-        3: 460.80753130000085,
-        4: 0.03012260003015399,
-        5: 4.468728699954227,
-    }
-    logger.warning(durations)
     sum_dur: float = sum(durations.values()) if durations else 0
     logger.info("=" * 20)
     for step, description in STEPS.items():
