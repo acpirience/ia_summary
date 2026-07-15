@@ -18,7 +18,6 @@ def setup_logging():
         level="INFO",  # On garde tout (DEBUG+) dans le fichier
         format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{line} - {message}",
         encoding="utf-8",
-        retention="10 days",  # Nettoie automatiquement les vieux fichiers après 10 jours
-        compression="zip",  # Optionnel : compresse les anciens logs pour gagner de la place
+        retention="5 days",  # Nettoie automatiquement les vieux fichiers après 10 jours
         enqueue=True,
     )
