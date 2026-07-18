@@ -40,6 +40,19 @@ FROM_ADDRESS: list[dict[str, str]] = [
     {"title": "Ollama", "email": "ollama.com"},  # hello@ollama.com
 ]
 
+# --- STEP ---
+
+STEPS: dict[int, str] = {
+    0: "Pre-initialization",
+    1: "cleanup HTML files",
+    2: "Searching and reading emails",
+    3: "Summarizing HTML files",
+    4: "Deleting HTML files",
+    5: "Git operations",
+    6: "Stats",
+}
+
+
 DAYS_AGO = 2  # Look back period
 
 # --- DATABSE CONFIGURATION ---

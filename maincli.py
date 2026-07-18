@@ -6,22 +6,12 @@ from loguru import logger
 
 import get_emails as gmail
 from chrono import Chrono
-from config import FROM_ADDRESS
+from config import FROM_ADDRESS, STEPS
 from database import Database
 from git_ops import git_add, git_commit_and_push, git_status
 from ia import summarize_html_files
 from log_ops import setup_logging
 from temp_dir import create_temp_dir, delete_html_files
-
-STEPS: dict[int, str] = {
-    0: "Pre-initialization",
-    1: "cleanup HTML files",
-    2: "Searching and reading emails",
-    3: "Summarizing HTML files",
-    4: "Deleting HTML files",
-    5: "Git operations",
-    6: "Stats",
-}
 
 app: typer.Typer = typer.Typer()
 
@@ -31,9 +21,18 @@ def title_log(message: str):
     logger.info("=" * len(message))
 
 
+def to_mn_sec(seconds: float) -> str:
+    ret: str = ""
+    minutes = int(seconds // 60)
+    remaining_seconds = seconds % 60
+    if minutes > 0:
+        ret += f"{minutes}m "
+    return f"{ret}{remaining_seconds:.2f}s"
+
+
 def elapsed_time_log(duration: dict[int, float], step: int):
     logger.info(
-        f"Step {step} duration: {duration[step]:.4f} seconds (total duration: {sum(duration.values()):.4f} seconds)\n"
+        f"Step {step} duration: {to_mn_sec(duration[step])} (total duration: {to_mn_sec(sum(duration.values()))})\n"
     )
 
 
@@ -43,13 +42,13 @@ def show_stats(durations: dict[int, float]):
     for step, description in STEPS.items():
         if step in durations:
             logger.info(
-                f"{step}: {description:<30} - Duration: {durations[step]:.4f} seconds ({durations[step] / sum_dur * 100:.2f}%)"
+                f"{step}: {description:<30} - Duration: {to_mn_sec(durations[step])} ({durations[step] / sum_dur * 100:.2f}%)"
             )
         else:
             if step != 6:
                 logger.info(f"{step}: {description:<30} - Duration: Not executed")
     logger.info("=" * 20)
-    logger.info(f"Total Execution Time: {sum(durations.values()):.4f} seconds")
+    logger.info(f"Total Execution Time: {to_mn_sec(sum(durations.values()))}")
 
 
 def start():
