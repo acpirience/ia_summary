@@ -1,0 +1,27 @@
+# Unified AI & Tech Industry Report
+
+This report synthesizes information from multiple documents, focusing on frequently mentioned topics to provide a cohesive overview of the current state and emerging trends in AI, technology, and their broader societal and economic impacts.
+
+---
+
+## AI Model Development and Performance
+
+The AI landscape is characterized by rapid innovation and intense competition, particularly between US and Chinese labs. A recurring theme is the advancement of **open-weight models** and the increasing capabilities of AI agents.
+
+### Key Developments:
+
+*   **Kimi K3 (Moonshot AI)**: This 2.8 trillion-parameter, multimodal model (text, image, video) is frequently highlighted. It claims superior performance to many leading AI models (e.g., scoring top in 6 of 7 frontend domains on Arena.ai benchmarks, second only to Claude Fable 5 in gaming) and is set for an **open-weight release**. Its cost is significantly lower ($15 per million tokens) compared to competitors like OpenAI ($30) and Anthropic ($50). However, its demand quickly exceeded Moonshot AI's compute capacity, leading to temporary subscription pauses and requiring specialized hardware (supernodes with 64+ datacenter accelerators).
+    *   **Links:**
+        *   AlphaSignal on Kimi K3 vs Fable: [Link](https://app.alphasignal.ai/c?uid=B14gUVgQAKbUeV4H&cid=9a7e569545b451f1&lid=1eebjhVWjDIu3Xrwm&mid=7642bd16-f4e9-4c25-bb10-3c72c8a5bb06)
+        *   daily.dev on Kimi K3 open-source performance: [Link](https://daily.dev/em/t/c?r=%2Fposts%2FT03gjyrIL%3Futm_source%3Dnotification%26utm_medium%3Demail%26utm_campaign%3Ddigest&link_id=eyJlbWFpbF9pZCI6IlJMbkNDUVVBQVotSUZITEk5Vl8wUEZyNVJDZXRwZz09IiwiaHJlZiI6Imh0dHBzOi8vZGFpbHkuZGV2L2VtL3QvYz9yPSUyRnBvc3RzJTJGVDAzZ2p5cklMJTNGdXRtX3NvdXJjZSUzRG5vdGlmaWNhdGlvbiUyNnV0bV9tZWRpdW0lM0RlbWFpbCUyNnV0bV9jYW1wYWlnbiUzRGRpZ2VzdFx1MDAyNmxpbmtfaWQ9Q0lPLS1MSU5LSUQiLCJpbnRlcm5hbCI6ImI5YzIwOTE0YjQxOGY1ZTcyNCIsImxpbmtfaWQiOjExNDN9__7978ec273c8a9750d9ee2b7527f9654aa67697f3565590e31b75e19b65999369)
+        *   Superhuman on China closing the frontier gap with Kimi K3: [Link](https://link.mail.beehiiv.com/ss/c/u001.QR8PDET7GVRZS9oWC_jpgN-7fBPki1x7UB8Hn_mdnlRftGck6UEMcu1j2VLARZmshsWFj6ac4y6-Zkxukr8nA6H6Pbc9k7_3NO795ReUZNgGFRoNRG-XUX2vndvhe7icDmswlxv_LrjGq17DfMyrNi6Hrv91-sVQOkPlsKXPXzx6jKwjC5ltJ36IghFa7fB8NElgAvp47tihVTSE0ud-AdpdaKfb5hxziiyAOzIYYAp8pcDTmsFpmFedfBWIMvEz/4sh/pZwdiWTbSb2O3_QtV-xg0g/h3/h001.oI6vBYU25RgLN0zzti_7_ndLodpTB7JuwyiaEfo7qxw)
+        *   The Deep View on Kimi K3 victory claims: [Link](https://elink983.thedeepview.co/ss/c/u001.wZPohD0JH12EksCsbt8ZeJKTFsVwtZ9gSlEWs5XjNsS4in9NK8CBTD-vIzYXNy6_wc9iZSBto75_Vf_S6Uo-wray2CUZL8Yxs7IQgxKPODzawpJtX08RYKAaosI0NMNuHkP9-yW_-x128CCUZfwlBS1C87XlKh02ydfTpdVmJyKp-d6fTwiBBOCNLnLlIiQiSQ3xGdnzDkmJUXznKDI3qTUsw8AluJaLDx5-5MyXN933yNT_BdFx9uUmSC7Se0rC/4sh/hKaF-YJeT0CHuFDg0uGNig/h4/h001.xqxj90yppJNwMmMSBfiJf6t9J7jnum8ZtGF9VDuxNHI)
+        *   TLDR Dev on Kimi K3 moment: [Link](https://tracking.tldrnewsletter.com/CL0/https:%2F%2Fstephen.bochinski.dev%2Fblog%2F2026%2F07%2F18%2Fthe-kimi-k3-moment%2F%3Futm_source=tldrdev/1/0100019f7f515a4a-05267cfe-e486-4c78-a462-8f63cfd8ff99-000000/wl2bHS5KglSVfDTIxsC-qvz_D-aU1gbwHCJ9olCR9LI=452)
+        *   Moonshot AI Plans Hong Kong IPO: [Link](https://tracking.tldrnewsletter.com/CL0/https:%2F%2Ffinance.yahoo.com%2Fmarkets%2Fstocks%2Farticles%2Fmoonshot-ai-plans-hong-kong-123000193.html%3Futm_source=tldrai/1/0100019f7fcfaa7e-e0637793-ad76-4f80-ab8f-0c60ccf312ff-000000/FL2dzkxuzsRnzFPgk39qe-x1LNC1aHczrHseGo5D-F4=452)
+*   **Claude Fable 5 (Anthropic)**: This frontier model is noted for its high capabilities, including disproving an 87-year-old math problem (Jacobian Conjecture) with a one-line formula. It competes closely with Kimi K3 and OpenAI's GPT-5.6 Sol. Its access has been a point of contention, with Anthropic ultimately including it in Max and Team Premium plans at reduced caps, after facing "challenging to predict" demand.
+    *   **Links:**
+        *   AlphaSignal intro text: On Kimi K3 vs Fable speed/cost tradeoffs.
+        *   Superhuman on Claude cracking math problem: [Link](https://link.mail.beehiiv.com/ss/c/u001.LDkxbMa7NCxUGG7E2Yh3ALHLkFrS3NRa9Q7HrcbnW1SRsBxhGWO4RIOKIw_odnGDXdb7Jgci6jULYWNng9M-AdKJgi-7R-tBmTwXue56U176B2pJs_xQnxuyntXc8cmBQ271KLtcfMP82HDKWKbxGWpyPFHn6ALbxZ-mglAYiFxeR42qoxlUbVBTMPrxA6ujQ04UP0NcTs7IFb-Z_S3mwY40RmyQpIBboloN80nfOujTu3fWUdZNRvKTZwjJ6ebbN2VV-F8A2ZiMf55nw_XVew/4si/i2kL1476R-mf7lMZmHvUsA/h4/h001.30E_LXdgkjTQ1HUS6q_vtqsNnVvQ9yYzqUdeTi6gZcU)
+        *   The Rundown AI on Fable 5 access: [Link](https://link.mail.beehiiv.com/ss/c/u001.6k0_SAz8nrOuu_-LoNX1HRvW9VP5rEYS4Ejtilvh9TAgCYpxhzYn8ui256kt-f9SNVDgv7ZSZH9iypGF4fUl5B3fqkvrKVfvZSGfnI_LnEKVOYYD__hINhoux1_P2zXWj8tTpyA3xFj2HeTYE6pjzsvx-On0XMEP43SYB2Ln-YgJUQaIDcl7LuuM7xFQozd7AV2RVBdNhvGU53viZ_c_OEd8OrhetQeJRAiLRT5RwGGUFjKnuu9gCG-8mq65EEn06hYsVGGPSPG2SXQyvZH5OeNaz31cq68B0jEbir-IdVY/4sh/Er0yFSHaQZSZzMB8QlWf5A/h5/h001.JXBbdbQc9ywCCSX3HY86XtIAiWpI95eCsB9nOpbeL70)
+        *   TLDR AI on Fable 5 vs GPT-5.6 Sol: [Link](https://tracking.tldrnewsletter.com/CL0/https:%2F%2Fcharlesazam.com%2Fblog%2Ffable-5-gpt-5-6-sol-goal%2F%3Futm_source=tldrai/1/0100019f7fcfaa7e-e0637793-ad76-4f80-ab8f-0c60ccf312ff-000000/c6d8viHUC6F429DiJfTFw6aIsvucv-ye_NeYkozbTwM=452)
+*   **GPT-5.6 Sol (OpenAI)**: Positioned as a rival to Fable 5, it scores well on coding benchmarks (e.g., 2.8 points above
